@@ -1,9 +1,6 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
 checkProgram() {
   # set to 1 initially
   local isInstalled=1
@@ -24,6 +21,7 @@ checkNpmPackage() {
 
 if [ "$(checkProgram node)" -eq 1 ] && [ "$(checkNpmPackage lint-staged)" -eq 1 ];
 then
+    cd ..
     npx lint-staged
 else
     echo "------------"

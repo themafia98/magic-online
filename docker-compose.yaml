@@ -2,6 +2,7 @@ version: '3.9'
 services:
   database:
     image: mongo:latest
+    container_name: magic_database
     ports:
       - 27017:27017
     volumes:

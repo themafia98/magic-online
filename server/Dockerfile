@@ -4,7 +4,10 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN yarn
+RUN apk update && \
+    apk add git
+
+RUN yarn install
 
 COPY . .
 
@@ -13,4 +16,4 @@ RUN ls -a
 
 RUN yarn build
 
-CMD ["yarn", "start:prod"]
+CMD ["yarn", "start:debug"]
