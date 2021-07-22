@@ -8,7 +8,10 @@ WORKDIR /usr/src/app
 # copy both package.json and package-lock.json
 COPY package*.json ./
 
-RUN yarn
+RUN apk update && \
+    apk add git
+
+RUN yarn install
 # If you are creating a production assembly
 # RUN npm ci --only = production
 

@@ -1,0 +1,31 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+checkProgram() {
+  # set to 1 initially
+  local isInstalled=1
+  # set to 0 if not found
+  type $1 >/dev/null 2>&1 || { local isInstalled=0; }
+  # return value
+  echo "$isInstalled"
+}
+
+checkNpmPackage() {
+  # set to 1 initially
+  local isInstalled=1
+  # set to 0 if not found
+  ls node_modules | grep $1 >/dev/null 2>&1 || { local isInstalled=0; }
+  # return value
+  echo "$isInstalled"
+}
+
+if [ "$(checkProgram node)" -eq 1 ] && [ "$(checkNpmPackage lint-staged)" -eq 1 ];
+then
+    yarn test:husky
+else
+    echo "------------"
+    echo "Skipped pre-push hook with code 0, because node.js and npm package 'lint-staged' not installed"
+    echo "If you want use pre-commit hook you can install node.js (LTS) and install npm packages: lint-staged and husky"
+    echo "------------"
+    exit 0
+fi
