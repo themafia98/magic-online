@@ -1,17 +1,27 @@
-FROM node:14.17.3-alpine3.11 AS frontend-build
+FROM node:lts-alpine AS frontend-build
+
+RUN apk update && \
+    apk add git
+
+# Install python/pip
+ENV PYTHONUNBUFFERED=1
+RUN apk add --update --no-cache python2 && ln -sf python2 /usr/bin/python
+RUN python2 -m ensurepip
+RUN pip2 install --no-cache --upgrade pip setuptools
 
 # create app dir
 WORKDIR /usr/src/app
+
+# add `/app/node_modules/.bin` to $PATH
+ENV PATH /app/node_modules/.bin:$PATH
 
 # install packages
 # the asterisk symbol ("*") is used to ensure that
 # copy both package.json and package-lock.json
 COPY package*.json ./
 
-RUN apk update && \
-    apk add git
 
-RUN yarn install
+RUN npm install
 # If you are creating a production assembly
 # RUN npm ci --only = production
 
@@ -21,7 +31,7 @@ COPY . .
 # check files list
 RUN ls -a
 
-RUN yarn build
+RUN npm run build
 
 FROM nginx:1.8.1-alpine
 COPY --from=frontend-build /usr/src/app/build /usr/share/nginx/html

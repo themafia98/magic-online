@@ -1,18 +1,18 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as SchemaMongoose, Types } from 'mongoose';
 
-export type IUserCharacterDocument = UserCharacter & Document;
+export type ICharacterItemDocument = CharacterItem & Document;
 
 @Schema()
-export class UserCharacter {
+export class CharacterItem {
   @Prop({ required: true, type: SchemaMongoose.Types.ObjectId })
-  user_character_id: Types.ObjectId;
-
-  @Prop({ required: true, type: SchemaMongoose.Types.ObjectId })
-  user_id: Types.ObjectId;
+  character_item_id: Types.ObjectId;
 
   @Prop({ required: true, type: SchemaMongoose.Types.ObjectId })
   character_id: Types.ObjectId;
+
+  @Prop({ required: true, type: SchemaMongoose.Types.ObjectId })
+  item_id: Types.ObjectId;
 }
 
-export const UserCharacterSchema = SchemaFactory.createForClass(UserCharacter);
+export const CharacterItemSchema = SchemaFactory.createForClass(CharacterItem);

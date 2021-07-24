@@ -9,6 +9,8 @@ services:
       - app-data:/var/lib/mongo/data
     env_file:
       - server/.env.database
+    networks:
+      - app-network
   backend:
     build:
       context: ./server

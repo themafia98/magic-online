@@ -3,7 +3,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { MONGODB_CONNECT } from './app.constant';
+
+const connectUrl = process.env.MONGO_URL;
+console.log(connectUrl);
 
 @Module({
   imports: [
@@ -11,7 +13,7 @@ import { MONGODB_CONNECT } from './app.constant';
       envFilePath: '.env',
       isGlobal: true,
     }),
-    MongooseModule.forRoot(MONGODB_CONNECT),
+    MongooseModule.forRoot(connectUrl),
   ],
   controllers: [AppController],
   providers: [AppService],

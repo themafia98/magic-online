@@ -6,6 +6,9 @@ export type ICharacterPartyDocument = CharacterParty & Document;
 @Schema()
 export class CharacterParty {
   @Prop({ required: true, type: SchemaMongoose.Types.ObjectId })
+  character_party_id: Types.ObjectId;
+
+  @Prop({ required: true, type: SchemaMongoose.Types.ObjectId })
   party_id: Types.ObjectId;
 
   @Prop({ required: true, type: SchemaMongoose.Types.ObjectId })
