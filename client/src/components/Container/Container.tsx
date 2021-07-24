@@ -1,31 +1,16 @@
-import React, {FC, ReactNode, useEffect, useState} from 'react';
+import React, {FC, ReactNode} from 'react';
 import {Layer, Stage} from 'react-konva';
-import Background from './Background/Background';
+import Background from '../Background/Background';
+import useResize from '../../hooks/useResize';
 
 interface Props {
-    children: ReactNode
+    children?: ReactNode
 }
 
 const Container: FC<Props> = ({
    children
 }) => {
-
-    const [width, setWidth] = useState<number>(window.innerWidth)
-    const [height, setHeight] = useState<number>(window.innerHeight)
-
-    useEffect(() => {
-
-        const handleResize = () => {
-            setWidth(window.innerWidth)
-            setHeight(window.innerHeight)
-        }
-
-        window.addEventListener('resize', handleResize)
-
-        return () => {
-            window.removeEventListener('resize', handleResize)
-        }
-    }, [])
+    const [width, height] =  useResize()
 
     return (
         <Stage

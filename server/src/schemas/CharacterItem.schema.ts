@@ -1,22 +1,18 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as SchemaMongoose, Types } from 'mongoose';
 
-export type ICharacterPartyDocument = CharacterParty & Document;
+export type ICharacterItemDocument = CharacterItem & Document;
 
 @Schema()
-export class CharacterParty {
+export class CharacterItem {
   @Prop({ required: true, type: SchemaMongoose.Types.ObjectId })
-  character_party_id: Types.ObjectId;
-
-  @Prop({ required: true, type: SchemaMongoose.Types.ObjectId })
-  party_id: Types.ObjectId;
+  character_item_id: Types.ObjectId;
 
   @Prop({ required: true, type: SchemaMongoose.Types.ObjectId })
   character_id: Types.ObjectId;
 
   @Prop({ required: true, type: SchemaMongoose.Types.ObjectId })
-  party_leader: Types.ObjectId;
+  item_id: Types.ObjectId;
 }
 
-export const CharacterPartySchema =
-  SchemaFactory.createForClass(CharacterParty);
+export const CharacterItemSchema = SchemaFactory.createForClass(CharacterItem);
