@@ -1,17 +1,18 @@
 import React, {FC} from 'react';
 import {Rect} from 'react-konva';
 import useImage from 'use-image';
+import {IMAGE_BG} from './Background.constant';
 
 interface Props {
     width: number
     height: number
-}
+};
 
 const Background: FC<Props> = ({
     width,
     height
 }) => {
-    const [background, status] = useImage('/bg.png')
+    const [background, status] = useImage(IMAGE_BG);
 
     if (status !== 'loaded') {
         return null
@@ -27,4 +28,4 @@ const Background: FC<Props> = ({
     )
 }
 
-export default Background
+export default Background;

@@ -7,17 +7,17 @@ import {
 import Container from '../Container/Container';
 import Main from '../../pages/Main/Main';
 import Game from '../../pages/Game/Game';
+import PrivateRoute from '../helpers/PrivateRoute';
 
 const App: FC = () => (
     <Container>
     <Router>
         <Switch>
-            <Route path="/play" component={Game} />
+            <PrivateRoute path="/play" component={Game} />
             <Route path="*" component={Main} />
         </Switch>
     </Router>
     </Container>
 )
-
 
 export default App;

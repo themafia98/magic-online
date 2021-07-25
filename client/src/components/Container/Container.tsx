@@ -5,7 +5,7 @@ import useResize from '../../hooks/useResize';
 
 interface Props {
     children?: ReactNode
-}
+};
 
 const Container: FC<Props> = ({
    children
@@ -25,4 +25,4 @@ const Container: FC<Props> = ({
     )
 }
 
-export default Container
+export default Container;

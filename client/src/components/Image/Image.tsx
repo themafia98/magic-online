@@ -7,7 +7,7 @@ interface Props {
     useCanvas?: boolean
     src: string
     alt: string
-}
+};
 
 const Image: FC<Props> = ({
     src,
@@ -31,4 +31,4 @@ const Image: FC<Props> = ({
     )
 }
 
-export default Image
+export default Image;
