@@ -2,6 +2,7 @@ import {FC, useMemo} from 'react';
 import useResize from '../../hooks/useResize';
 import {Layer, Text} from 'react-konva';
 import { useHistory } from 'react-router-dom';
+import withAuthContext from '../../services/Auth/withAuthContext';
 
 const Game: FC = () => {
     const history = useHistory();
@@ -29,4 +30,4 @@ const Game: FC = () => {
     )
 }
 
-export default Game
+export default withAuthContext(Game);
