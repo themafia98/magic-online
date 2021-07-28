@@ -1,1 +1,0 @@
-export const IMAGE_BG = '/bg.png';

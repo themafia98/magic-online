@@ -1,83 +1,52 @@
 {
-  "name": "client",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
-    "@types/jest": "^26.0.15",
-    "@types/node": "^12.0.0",
-    "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
-    "konva": "^8.1.1",
-    "normalize.css": "^8.0.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-konva": "^17.0.2-5",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.3",
-    "typescript": "^4.1.2",
-    "use-image": "^1.0.8",
-    "web-vitals": "^1.0.1"
-  },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "lint-staged": "lint-staged",
-    "test:husky": "cross-env CI=true react-scripts test --env=jsdom",
-    "prepare": "cd .. && husky install client/.husky"
+    "lint": "eslint --fix ./src/* --no-ignore",
+    "serve": "webpack serve --mode=development --progress",
+    "build": "webpack",
+    "build:prod": "webpack --config webpack.config.prod.js"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "resolutions": {
-    "*/node-sass": "*"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "lint-staged": {
-    "*.{ts,tsx,json,scss,css,md}": "prettier --write \"**/*.{ts,js,jsx,tsx,json,scss,css,md}\" --ignore-path .gitignore",
-    "*.scss": "stylelint 'src/**/*.scss' --fix --syntax=scss",
-    "*.{ts,tsx, jsx, js}": "eslint src --fix --max-warnings=0"
+  "engines": {
+    "node": ">=14.0.0"
   },
   "devDependencies": {
-    "@types/http-proxy-middleware": "^1.0.0",
-    "@types/react-router-dom": "^5.1.8",
-    "@typescript-eslint/eslint-plugin": "^4.28.4",
-    "@typescript-eslint/parser": "^4.28.4",
-    "cross-env": "^7.0.3",
-    "eslint": "^7.31.0",
-    "eslint-config-airbnb": "^18.2.1",
+    "@types/node": "^16.3.2",
+    "@typescript-eslint/eslint-plugin": "^4.28.3",
+    "@typescript-eslint/parser": "^4.28.3",
+    "autoprefixer": "^10.3.1",
+    "caniuse-lite": "^1.0.30001243",
+    "clean-webpack-plugin": "^4.0.0-alpha.0",
+    "copy-webpack-plugin": "^9.0.1",
+    "css-loader": "^6.0.0",
+    "cssnano": "^5.0.6",
+    "eslint": "^7.30.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.23.4",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-jsdoc": "^36.0.6",
+    "eslint-plugin-prefer-arrow": "^1.2.3",
     "eslint-plugin-prettier": "^3.4.0",
-    "eslint-plugin-react": "^7.24.0",
-    "eslint-plugin-react-hooks": "^4.2.0",
-    "http-proxy-middleware": "^2.0.1",
-    "husky": "^7.0.1",
-    "lint-staged": "^11.1.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.3.2",
+    "mini-css-extract-plugin": "^2.1.0",
+    "node-sass": "^6.0.1",
+    "postcss": "^8.3.5",
+    "postcss-cssnext": "^3.1.0",
+    "postcss-import": "^14.0.2",
+    "postcss-loader": "^6.1.1",
     "prettier": "^2.3.2",
-    "stylelint": "^13.13.1",
-    "stylelint-config-css-modules": "^2.2.0",
-    "stylelint-config-prettier": "^8.0.2",
-    "stylelint-config-standard": "^22.0.0",
-    "typescript-eslint": "0.0.1-alpha.0"
+    "sass-loader": "^12.1.0",
+    "style-loader": "^3.1.0",
+    "sugarss": "^4.0.1",
+    "ts-loader": "^9.2.3",
+    "tsconfig-paths-webpack-plugin": "^3.5.1",
+    "typescript": "^4.3.5",
+    "webpack": "^5.44.0",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^3.11.2",
+    "webpack-merge": "^5.8.0"
+  },
+  "dependencies": {
+    "normalize.css": "^8.0.1",
+    "phaser": "^3.55.2"
   }
 }
