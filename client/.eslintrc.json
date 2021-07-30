@@ -229,12 +229,7 @@
       "semi-style": "off",
       "import/no-unresolved": "off",
       "simple-import-sort/exports": "error",
-      "simple-import-sort/imports": [
-        "error",
-        {
-          "groups": [["^\\u0000"], ["^@?(?!ekapusta)\\w"], ["^@ekapusta?\\w"], ["^[^.]"], ["^\\."]]
-        }
-      ],
+      "simple-import-sort/imports": "off",
       "sort-imports": "off",
       "import/first": "error",
       "import/newline-after-import": "error",
