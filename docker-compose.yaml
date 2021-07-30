@@ -17,6 +17,7 @@ services:
       target: ${TARGET_ENV}
       dockerfile: ./Dockerfile
     container_name: magic_backend
+    tty: true
     env_file:
       - server/.env
     ports:

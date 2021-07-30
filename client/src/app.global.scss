@@ -8,3 +8,9 @@ canvas {
   max-width: 100%;
   max-height: 50vw;
 }
+
+@media (max-width: 640px) {
+  canvas {
+    max-height: initial;
+  }
+}
