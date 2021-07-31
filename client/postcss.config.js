@@ -1,4 +1,5 @@
-module.exports = ({ file, options, env }) => ({
+// @ts-ignore
+module.exports = ({ env }) => ({
     parser: false,
     plugins: {
         'postcss-import': {},
