@@ -1,32 +1,39 @@
 import { Scene } from 'phaser';
-import TextStyle = Phaser.Types.GameObjects.Text.TextStyle;
-import Text = Phaser.GameObjects.Text;
+import UIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin';
+import { IUserInterfaceScene } from '../../interfaces/ui.interface';
+import { createLoginDialog } from '../../utils/ui.utils';
+import { APP_NAME } from '../../config/App.config';
 
-class Main extends Scene {
-  clickCountText: Text | undefined;
+class Main extends Scene implements IUserInterfaceScene {
+  rexUI: UIPlugin | null = null;
   constructor() {
-    super({});
-  }
-
-  updateClickCountText(clickCount: number) {
-    if (this.clickCountText) {
-      this.clickCountText.setText(`Button has been clicked ${clickCount} times.`);
-    }
+    super({
+      key: 'main',
+    });
   }
 
   preload() {}
 
   create() {
-    let clickCount = 0;
-    this.clickCountText = this.add.text(100, 200, '');
+    const print = this.add.text(0, 0, '');
 
-    this.add
-      .text(window.innerWidth / 2.6, 10, 'Magic online', {
-        font: '60px Courier',
-        fill: '#00ff00',
-      } as TextStyle)
-      .setInteractive()
-      .on('pointerdown', () => this.updateClickCountText(++clickCount));
+    const loginDialog = createLoginDialog(this, {
+      x: window.innerWidth / 2,
+      y: window.innerHeight / 2,
+      width: window.innerWidth / 2,
+      height: window.innerHeight / 1.3,
+      title: APP_NAME,
+      fields: {
+        username: '',
+        password: '',
+      },
+    });
+
+    if (loginDialog) {
+      loginDialog.on('login', (username: string, password: string) => {
+        print.text += `${username}:${password}\n`;
+      });
+    }
   }
 
   update() {}

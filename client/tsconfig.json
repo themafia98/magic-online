@@ -69,6 +69,8 @@
     "Phaser"
   ],
   "include": [
+    "**/*",
+    "node_modules/phaser3-rex-plugins-types",
     "src",
     "./src",
     "dist"

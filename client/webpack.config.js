@@ -69,6 +69,7 @@ module.exports = {
             // },
         ],
     },
+  // @ts-ignore
     plugins: [
         new CleanWebpackPlugin(),
         new CopyWebpackPlugin({
