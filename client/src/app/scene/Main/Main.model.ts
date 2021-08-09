@@ -1,42 +1,39 @@
-import { Scene } from 'phaser';
+import { Scene, GameObjects } from 'phaser';
 import UIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin';
+import { SCENE_GAME_CORE_KEY, SCENE_MAIN_KEY } from '../../config/constants';
 import { IUserInterfaceScene } from '../../interfaces/ui.interface';
-import { createLoginDialog } from '../../utils/ui.utils';
-import { APP_NAME } from '../../config/App.config';
+import LoginDialog from '../../components/LoginDialog/LoginDialog';
+import Router from '../../models/Router/Router';
+import { appRoutes } from '../../config/App.router';
 
 class Main extends Scene implements IUserInterfaceScene {
-  rexUI: UIPlugin | null = null;
+  dialog: UIPlugin.Sizer | null = null;
+  print: GameObjects.Text | null = null;
+  rexUI: any;
+
   constructor() {
     super({
-      key: 'main',
+      key: SCENE_MAIN_KEY,
     });
   }
 
-  preload() {}
+  preload(): void {
+    this.load.image('dragon', '/public/images/dragon.jpeg');
+    this.load.image('user', '/public/images/person.png');
+    this.load.image('password', '/public/images/key.png');
 
-  create() {
-    const print = this.add.text(0, 0, '');
+    this.print = this.add.text(0, 0, '');
+  }
 
-    const loginDialog = createLoginDialog(this, {
-      x: window.innerWidth / 2,
-      y: window.innerHeight / 2,
-      width: window.innerWidth / 2,
-      height: window.innerHeight / 1.3,
-      title: APP_NAME,
-      fields: {
-        username: '',
-        password: '',
-      },
-    });
+  create(): void {
+    this.dialog = new LoginDialog(this.scene.scene, this.scene.start.bind(this.scene)).view as UIPlugin.Sizer;
+  }
 
-    if (loginDialog) {
-      loginDialog.on('login', (username: string, password: string) => {
-        print.text += `${username}:${password}\n`;
-      });
+  update(time: number, delta: number) {
+    if (Router.parseLocation() === appRoutes.PLAY) {
+      this.scene.start(SCENE_GAME_CORE_KEY);
     }
   }
-
-  update() {}
 }
 
 export default Main;

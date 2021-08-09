@@ -1,9 +1,12 @@
 {
-  "extends": "../.eslintrc.json",
+  "extends": ["../.eslintrc.json", "plugin:security/recommended"],
+  "plugins": ["security"],
   "parserOptions": {
     "project": "../tsconfig.*?.json",
     "createDefaultProgram": true
   },
   "ignorePatterns": ["!**/*"],
-  "rules": {}
+  "rules": {
+    "@typescript-eslint/naming-convention": "off"
+  }
 }

@@ -3,5 +3,6 @@
   "compilerOptions": {
     "declaration": false,
     "sourceMap": false
-  }
+  },
+  "typeRoots": ["node_modules/@types", "src/typings.d.ts", "./node_modules/phaser/types", "./global.d.ts", "./assets.d.ts"]
 }
