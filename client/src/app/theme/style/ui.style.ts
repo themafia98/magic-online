@@ -1,44 +1,34 @@
 import { COLOR_LIGHT } from '../colors';
 import { IUserInterfaceScene } from '../../interfaces/ui.interface';
-import { setTextMask } from '../../utils/utils.global';
+import InputText from 'phaser3-rex-plugins/plugins/inputtext.js';
+import Label from 'phaser3-rex-plugins/templates/ui/label/Label';
 
-export const loginButtonStyle = (scene: IUserInterfaceScene): Record<string, any> => {
+export const getLoginInputStyle = (config: InputText.IConfig) => ({
+  borderColor: '#000',
+  backgroundColor: '#392613',
+  border: 1,
+  placeholder: 'username',
+  align: 'center',
+  ...config,
+});
+
+export const loginButtonStyle = (scene: IUserInterfaceScene, textValue = ''): Label.IConfig => {
   if (!scene.rexUI) {
     return {};
   }
 
   return {
-    orientation: 'x',
-    background: scene.rexUI.add.roundRectangle(0, 0, 10, 10, 10, COLOR_LIGHT),
-    text: scene.add.text(0, 0, 'Login'),
-    space: { top: 8, bottom: 8, left: 8, right: 8 },
-  };
-};
-
-export const passwordLabelStyle = (scene: IUserInterfaceScene, value: string): Record<string, any> => {
-  if (!scene.rexUI) {
-    return {};
-  }
-
-  return {
-    orientation: 'x',
-    background: scene.rexUI.add.roundRectangle(0, 0, 10, 10, 10).setStrokeStyle(2, COLOR_LIGHT),
-    icon: scene.add.image(0, 0, 'password'),
-    text: scene.rexUI.add.BBCodeText(0, 0, setTextMask(value), { fixedWidth: 150, fixedHeight: 36, valign: 'center' }),
-    space: { top: 5, bottom: 5, left: 5, right: 5, icon: 10 },
-  };
-};
-
-export const usernameLabelStyle = (scene: IUserInterfaceScene, value: string): Record<string, any> => {
-  if (!scene.rexUI) {
-    return {};
-  }
-
-  return {
-    orientation: 'x',
-    background: scene.rexUI.add.roundRectangle(0, 0, 10, 10, 10).setStrokeStyle(2, COLOR_LIGHT),
-    icon: scene.add.image(0, 0, 'user'),
-    text: scene.rexUI.add.BBCodeText(0, 0, setTextMask(value), { fixedWidth: 150, fixedHeight: 36, valign: 'center' }),
-    space: { top: 5, bottom: 5, left: 5, right: 5, icon: 10 },
+    orientation: 0,
+    align: 'center',
+    background: scene.rexUI.add.roundRectangle(0, 0, 50, 50, 10, COLOR_LIGHT),
+    space: {
+      top: 15,
+      bottom: 15,
+      left: 15,
+      right: 15,
+    },
+    text: scene.add.text(0, 0, textValue, {
+      fontSize: '18px',
+    }),
   };
 };
