@@ -3,6 +3,7 @@ import { appRoutes } from '../../config/App.router';
 import REGISTRATION_TEMPLATE from '../../templates/registration';
 import ERROR_404_TEMPLATE from '../../templates/Error404';
 import { runGame } from '../../start';
+import { SCRIPT_LOADER_KEY } from '../../templates/ScriptInjection';
 
 export interface IRouterConfig {
   [key: string]: string;
@@ -34,8 +35,8 @@ class Router implements IRouter {
     }
   };
 
-  static go = (force?: boolean): void => {
-    const pathname = Router.parseLocation();
+  static go = (to = '', force?: boolean): void => {
+    const pathname = to ? to : Router.parseLocation();
 
     if (force) {
       window.location.assign(pathname);
@@ -49,8 +50,9 @@ class Router implements IRouter {
       document.getElementById('app').innerHTML = '';
 
       setTimeout(() => {
+        location.pathname = appRoutes.MAIN;
         runGame();
-      }, 1000);
+      }, 0);
 
       return;
     }
@@ -66,11 +68,17 @@ class Router implements IRouter {
     const buffer = document.createElement('div');
     buffer.innerHTML = page;
 
+    const loader = buffer.querySelector(`.${SCRIPT_LOADER_KEY}`);
+
+    if (loader) {
+      loader.remove();
+    }
+
     if (!buffer) {
       return;
     }
 
-    window.app.innerHTML = page;
+    window.app.innerHTML = buffer.innerHTML;
   };
 
   public isCurrentPathname = (route: string): boolean => route === location.pathname;

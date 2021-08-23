@@ -50,9 +50,21 @@ module.exports = {
     contentBase: 'dist',
     compress: true,
     port: 3000,
-    historyApiFallback: true,
     overlay: true,
     disableHostCheck: true,
+    historyApiFallback: true,
+    logLevel: 'debug',
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:9229',
+        pathRewrite: { "^/api": "" }
+      },
+      '/socket.io': {
+        target: 'http://127.0.0.1:9229',
+        logLevel: 'debug',
+        ws: true
+      },
+    }
   },
   module: {
     rules: [

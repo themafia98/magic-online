@@ -1,6 +1,111 @@
+:root {
+  --simpleColor: #FFF;
+  --formColor: #F7FAFC;
+  --titleColor: #1A202C;
+  --inputColor: #EDF2F7;
+  --textInputColor: #718096;
+  --submitButtonColor: linear-gradient(90.81deg, #F56565 0%, #ED64A6 100%);
+  --submitButtonHoverColor: linear-gradient(90.81deg, #dc2424 0%, #ED64A6 100%);
+  --returnColor: linear-gradient(90.81deg, #fbd3d3 0%, #c74c89 100%);
+  --returnColorHover: linear-gradient(90.81deg, #d29c9c 0%, #c74c89 100%);
+}
+
+.input {
+  width: 100%;
+  height: 60px;
+  padding: 18px;
+  outline: none;
+  border-radius: 12px;
+  box-sizing: border-box;
+  background: var(--inputColor);
+  border: 1px solid var(--inputColor);
+  color: var(--textInputColor);
+  &:not(:first-child) {
+    margin-bottom: 10px;
+  }
+}
+
+.title {
+  font-family: Work Sans;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 40px;
+  line-height: 58px;
+  font-width: bold;
+  color: var(--titleColor);
+  margin-top: 0;
+  margin-bottom: 16px;
+}
 
 .regForm {
+  align-items: center;
+  width: 560px;
+  display: flex;
+  flex-direction: column;
+  background: var(--formColor);
+  padding: 0 15px;
+  border-radius: 16px;
+}
+
+.root {
   display: flex;
   align-items: center;
+  justify-content: center;
   height: 100vh;
+  width: 100vw;
+  background: var(--simpleColor);
+}
+
+.action {
+  height: 100%;
+  width: 100%;
+  padding-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.button {
+  transition: transform 0.3s ease-out;
+  background: #F56565;
+  background: var(--submitButtonColor);
+  border-radius: 12px;
+  padding: 18px;
+  box-sizing: border-box;
+  height: 57px;
+  width: 100%;
+  border: 1px solid #F56565;
+  border-color: var(--submitButtonColor);
+  color: var(--simpleColor);
+  font-width: bold;
+  font-size: 16px;
+
+  &:hover:not(:disabled) {
+    background: #a24c4c;
+    background: var(--submitButtonHoverColor);
+  }
+
+  &:not(:disabled) {
+    cursor: pointer;
+  }
+
+  &:first-child {
+    margin-bottom: 10px;
+  }
+
+  &:active {
+    transform: translateY(-1px);
+  }
+}
+
+.returnButton {
+  background: #fbd3d3;
+  background: var(--returnColor);
+  border: none;
+  &:hover:not(:disabled) {
+    background: #d29c9c;
+    background: var(--returnColorHover);
+  }
 }

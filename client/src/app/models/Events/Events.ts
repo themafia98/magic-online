@@ -1,8 +1,7 @@
-import Button from '../Button/Button.model';
 import Router from '../Router/Router';
 import { appRoutes } from '../../config/App.router';
 import { runCallback } from '../../components/LoginDialog/LoginDialog';
-import { SCENE_GAME_CORE_KEY } from '../../config/constants';
+import { PRE_LOAD_GAME_KEY } from '../../config/constants';
 
 interface IEvents {
   handleClickMain: (name: string, start: runCallback) => void;
@@ -10,9 +9,6 @@ interface IEvents {
 
 const Events: IEvents = {
   handleClickMain: (name: string, start: runCallback): void => {
-    // eslint-disable-next-line no-debugger
-    debugger;
-
     if (!name) {
       throw new Error('invalid event');
     }
@@ -20,11 +16,11 @@ const Events: IEvents = {
     window.history.pushState({}, window.location.pathname, `${window.location.origin}${name}`);
 
     if (name === appRoutes.PLAY) {
-      start(SCENE_GAME_CORE_KEY);
+      start(PRE_LOAD_GAME_KEY);
       return;
     }
 
-    Router.go(true);
+    Router.go('', true);
   },
 };
 

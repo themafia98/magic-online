@@ -6,9 +6,6 @@ import Router from './models/Router/Router';
 import './app.scss';
 import { CustomWindow } from './interfaces/global.interface';
 import { appRoutes } from './config/App.router';
-import { SCENE_GAME_CORE_KEY, SCENE_MAIN_KEY } from './config/constants';
-import Main from './scene/Main/Main.model';
-import GameCore from './scene/GameCore/GameCore';
 
 declare const window: CustomWindow;
 

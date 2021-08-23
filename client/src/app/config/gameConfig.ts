@@ -1,7 +1,9 @@
 import { AUTO, Types } from 'phaser';
 import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
-import Main from '../scene/Main/Main.model';
-import GameCore from '../scene/GameCore/GameCore';
+import MainMenu from '../scene/MainMenu/MainMenu';
+import Engine from '../scene/Engine/Engine';
+import Loader from '../scene/Loader/Loader';
+import GameLoader from '../scene/GameLoader/GameLoader';
 
 const gameConfig: Types.Core.GameConfig = {
   type: AUTO,
@@ -14,7 +16,7 @@ const gameConfig: Types.Core.GameConfig = {
       debug: false,
     },
   },
-  scene: [Main, GameCore],
+  scene: [Loader, MainMenu, GameLoader, Engine],
   autoFocus: true,
   dom: {
     createContainer: true,
