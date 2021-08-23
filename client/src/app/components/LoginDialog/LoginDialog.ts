@@ -90,6 +90,9 @@ class LoginDialog extends ViewComponent {
       })
     );
 
+    passwordInput.subscribe('textchange', Input.onTextChanged);
+    usernameInput.subscribe('textchange', Input.onTextChanged);
+
     const emptyPlace = this.context.add.text(0, 0, '');
 
     const loginDialog = this.builder.add
@@ -109,7 +112,13 @@ class LoginDialog extends ViewComponent {
     const buttons = new Button(this.context, 'Login', {}, appRoutes.PLAY);
     const regButton = new Button(this.context, 'Registration', {}, appRoutes.REGISTRATION);
 
-    buttons.subscribe('button.click', ({ name }: Button) => Events.handleClickMain(name, this.start));
+    const eventPayload = {
+      start: this.start,
+      passwordInput,
+      usernameInput,
+    };
+
+    buttons.subscribe('button.click', ({ name }: Button) => Events.handleClickMain(name, eventPayload));
 
     buttons.addButton(buttons.draw());
     buttons.addButton(regButton.draw());

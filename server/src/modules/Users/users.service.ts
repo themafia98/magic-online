@@ -10,12 +10,8 @@ export class UsersService {
     @InjectModel(User.name) private readonly users: Model<IUserDocument>,
   ) {}
 
-  async findAll(): Promise<IUserDocument[]> {
-    return this.users.find();
-  }
-
-  async findOne(id: string): Promise<IUserDocument> {
-    return this.users.findOne({ _id: id });
+  async findOneByName(name: string): Promise<IUserDocument> {
+    return this.users.findOne({ $or: [{ username: name }, { email: name }] });
   }
 
   async create(doc: ICreateUserBody): Promise<IUser> {

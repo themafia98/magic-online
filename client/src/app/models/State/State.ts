@@ -2,7 +2,7 @@ interface IStateValues {
   [key: string]: any;
 }
 
-interface IState {
+export interface IState {
   getState(): IStateValues;
   setState<T = Record<string, any>>(values): void;
 }

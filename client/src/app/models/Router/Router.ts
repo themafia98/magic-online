@@ -1,9 +1,10 @@
 import { CustomWindow } from '../../interfaces/global.interface';
 import { appRoutes } from '../../config/App.router';
-import REGISTRATION_TEMPLATE from '../../templates/registration';
+import REGISTRATION_TEMPLATE from '../../templates/RegistrationPage';
 import ERROR_404_TEMPLATE from '../../templates/Error404';
 import { runGame } from '../../start';
 import { SCRIPT_LOADER_KEY } from '../../templates/ScriptInjection';
+import generateRegistrationTemplate from '../../templates/RegistrationPage';
 
 export interface IRouterConfig {
   [key: string]: string;
@@ -29,7 +30,7 @@ class Router implements IRouter {
       case appRoutes.MAIN:
         return appRoutes.MAIN;
       case appRoutes.REGISTRATION:
-        return REGISTRATION_TEMPLATE;
+        return generateRegistrationTemplate();
       default:
         return ERROR_404_TEMPLATE;
     }
@@ -37,6 +38,8 @@ class Router implements IRouter {
 
   static go = (to = '', force?: boolean): void => {
     const pathname = to ? to : Router.parseLocation();
+
+    window.history.pushState({}, window.location.pathname, `${window.location.origin}${pathname}`);
 
     if (force) {
       window.location.assign(pathname);
@@ -46,13 +49,14 @@ class Router implements IRouter {
 
     const page = Router.loadPage(pathname);
 
-    if (page === appRoutes.MAIN) {
+    if (page) {
       document.getElementById('app').innerHTML = '';
+    }
 
-      setTimeout(() => {
-        location.pathname = appRoutes.MAIN;
-        runGame();
-      }, 0);
+    if (pathname === appRoutes.PLAY || pathname === appRoutes.MAIN) {
+      location.pathname = pathname === appRoutes.MAIN ? appRoutes.MAIN : appRoutes.PLAY;
+
+      runGame();
 
       return;
     }

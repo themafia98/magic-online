@@ -6,6 +6,7 @@ import Router from './models/Router/Router';
 import './app.scss';
 import { CustomWindow } from './interfaces/global.interface';
 import { appRoutes } from './config/App.router';
+import Request from './models/Request/Request';
 
 declare const window: CustomWindow;
 
@@ -30,14 +31,21 @@ const bootstrap = (): void => {
   }
 
   const router = new Router();
+  const token = Request.getToken();
 
   if (!router.isCurrentPathname(appRoutes.REGISTRATION)) {
+    if (token && appRoutes.PLAY !== Router.parseLocation()) {
+      Router.go(appRoutes.PLAY);
+
+      return;
+    }
+
     runGame();
 
     return;
   }
 
-  Router.go();
+  Router.go(token ? appRoutes.PLAY : '');
 };
 
 export default bootstrap;

@@ -14,8 +14,6 @@ class Input extends InputText {
     scene.add.existing(this);
 
     this.type = type;
-
-    this.subscribe('textchange', Input.onTextChanged);
   }
 
   static onTextChanged = (input: Input, event: InputEvent) => {

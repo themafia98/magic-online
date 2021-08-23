@@ -22,10 +22,6 @@ class Button extends Buttons implements IButton {
     this.buttonValue = value;
     this.link = link;
 
-    this.subscribe('button.click', (button): void => {
-      console.log(button);
-    });
-
     this.space = { left: 0, right: 0, top: 0, bottom: 0, item: 10 };
 
     this.scene.add.existing(this);
