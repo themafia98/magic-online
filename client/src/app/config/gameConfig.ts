@@ -33,6 +33,7 @@ const gameConfig: Types.Core.GameConfig = {
 };
 
 export const MAP_CONFIG = {
+  SPRITE_PLAYER_KEY: 'playerSprite',
   SPRITE_MAP_KEY: 'mapSprite',
   MASTER_KEY: 'master',
   CHUNK_KEY: 'chunk',

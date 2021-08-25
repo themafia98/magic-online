@@ -1,8 +1,9 @@
-import { Scene, Cache, Cameras } from 'phaser';
+import { Scene, Cache, GameObjects, Cameras } from 'phaser';
 import { SCENE_GAME_CORE_KEY } from '../../config/constants';
 import { MAP_CONFIG } from '../../config/gameConfig';
 import { GAME_CORE_API_ENDPOINTS } from '../../models/Domain/Domain.constant';
 import State, { IState } from '../../models/State/State';
+import { computeChunkId, getAvailableChunksIds } from './Engine.utils';
 
 interface IEngineState {
   masterW: number;
@@ -25,8 +26,12 @@ const defaultState: IEngineState = {
 };
 
 class Engine extends Scene {
+  public readonly state: IState;
+
   private camera: Cameras.Scene2D.Camera;
-  private readonly state: IState;
+  private readonly chunkW: number = 32;
+  private readonly chunkH: number = 32;
+  private player: GameObjects.Image;
 
   constructor() {
     super({
@@ -41,25 +46,6 @@ class Engine extends Scene {
   }
 
   public create(): void {
-    this.scene.scene.add.text(0, 0, 'dasd');
-  }
-
-  private listen(): void {
-    this.cache.tilemap.events.on('add', (cache: Cache.CacheManager, key: string) => {
-      this.rerenderMap(key);
-    });
-  }
-
-  private fetch(): void {
-    this.load.image(MAP_CONFIG.SPRITE_MAP_KEY, GAME_CORE_API_ENDPOINTS.MAP_SPRITE);
-    this.load.json(MAP_CONFIG.MASTER_KEY, GAME_CORE_API_ENDPOINTS.MASTER_MAP);
-  }
-
-  private clearMap(): void {
-    this.state.setState(defaultState);
-  }
-
-  private rerenderMap(chunkKey: string): void {
     this.clearMap();
 
     const masterChunksData = this.cache.json.get(MAP_CONFIG.MASTER_KEY);
@@ -70,10 +56,70 @@ class Engine extends Scene {
       chunkHeight: masterChunksData.chunkHeight,
       nbChunksHorizontal: masterChunksData.nbChunksHorizontal,
       nbChunksVertical: masterChunksData.nbChunksVertical,
-      lastChunkID: masterChunksData.nbChunksHorizontal * masterChunksData.nbChunksVertical - 1,
+      lastChunkId: masterChunksData.nbChunksHorizontal * masterChunksData.nbChunksVertical - 1,
     });
 
     this.camera = this.cameras.main;
+
+    // sizes of the world in tiles
+    const worldW = masterChunksData.nbChunksHorizontal * masterChunksData.chunkWidth;
+    const worldH = masterChunksData.nbChunksVertical * masterChunksData.chunkHeight;
+
+    this.camera.setBounds(0, 0, worldW * this.chunkW, worldH * this.chunkH);
+
+    const player = this.add.image(this.chunkW * 10, this.chunkH * 10, MAP_CONFIG.SPRITE_PLAYER_KEY);
+
+    player.setDepth(1);
+
+    this.camera.startFollow(player);
+    this.player = player;
+
+    this.rerenderMap();
+  }
+
+  private listen(): void {
+    this.cache.tilemap.events.on('add', (cache: Cache.CacheManager, key: string) => {
+      this.rerenderMap();
+    });
+  }
+
+  private fetch(): void {
+    this.load.image(MAP_CONFIG.SPRITE_PLAYER_KEY, GAME_CORE_API_ENDPOINTS.PLAYER_SPRITE);
+    this.load.image(MAP_CONFIG.SPRITE_MAP_KEY, GAME_CORE_API_ENDPOINTS.MAP_SPRITE);
+    this.load.json(MAP_CONFIG.MASTER_KEY, GAME_CORE_API_ENDPOINTS.MASTER_MAP);
+  }
+
+  private destroyChunk(id: number, visibleChunks: Array<number>): void {
+    const state = this.state.getState();
+
+    state.map[id].destroy();
+
+    const idx = visibleChunks.indexOf(id);
+
+    if (idx > -1) {
+      visibleChunks.splice(idx, 1);
+    }
+  }
+
+  private rerenderMap(): void {
+    const chunkId = computeChunkId(this.player.x, this.player.y, this);
+
+    const chunks = getAvailableChunksIds(this, chunkId);
+
+    const { mapChunksIds } = this.state.getState();
+
+    const visibleChunks = chunks.filter((chunk) => mapChunksIds.indexOf(chunk) < 0);
+
+    mapChunksIds
+      .filter((prevChunk) => chunks.indexOf(prevChunk) < 0)
+      .forEach((chunk) => {
+        this.destroyChunk(chunk, visibleChunks);
+      });
+
+    this.state.setState({
+      ...this.state.getState(),
+      mapChunksIds: visibleChunks,
+    });
   }
 }
 
