@@ -27,6 +27,7 @@ class GameLoader extends Scene implements IGameLoader {
       key: PRE_LOAD_GAME_KEY,
     });
     this.state = new State({
+      isStop: false,
       shouldRedirect: false,
       errorMessage: '',
       user: null,
@@ -52,7 +53,8 @@ class GameLoader extends Scene implements IGameLoader {
   }
 
   public update() {
-    const { errorMessage } = this.state.getState();
+    const { errorMessage, isStop } = this.state.getState();
+
     if (!errorMessage) {
       return;
     }
@@ -61,7 +63,13 @@ class GameLoader extends Scene implements IGameLoader {
       return;
     }
 
-    this.loadingText.setText(errorMessage);
+    if (this.loadingText.text !== errorMessage) {
+      this.loadingText.setText(errorMessage);
+    }
+
+    if (isStop) {
+      return;
+    }
 
     this.timeoutRef = setTimeout(() => {
       window.location.assign(appRoutes.MAIN);
@@ -81,6 +89,11 @@ class GameLoader extends Scene implements IGameLoader {
   private handleLoad = () => {
     const { user } = this.state.getState();
     if (user) {
+      this.state.setState({
+        ...this.state.getState(),
+        isStop: true,
+        errorMessage: 'Something wrong, you should reload application.',
+      });
       return;
     }
 

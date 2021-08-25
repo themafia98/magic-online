@@ -16,8 +16,8 @@ export enum API_ENDPOINTS {
 }
 
 export enum GAME_CORE_API_ENDPOINTS {
-  PLAYER_SPRITE = '/PUBLIC/sprite/player',
-  MAP_SPRITE = '/public/sprite/map',
-  MASTER_MAP = '/map/master',
-  MAP_CHUNK = '/map/chunk',
+  PLAYER_SPRITE = '/api/canvas/sprite/player',
+  MAP_SPRITE = '/api/canvas/sprite/map',
+  MASTER_MAP = '/api/canvas/map/master',
+  MAP_CHUNK = '/api/canvas/map/chunk',
 }

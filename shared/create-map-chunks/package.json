@@ -1,0 +1,16 @@
+{
+  "name": "create-map-chunks",
+  "version": "1.0.0",
+  "description": "",
+  "main": "create-map-chunks.js",
+  "scripts": {
+    "start": "node ./create-map-chunks.js -i /static/fullmap.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "clone": "^2.1.2",
+    "optimist": "^0.6.1"
+  }
+}

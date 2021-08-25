@@ -1,5 +1,5 @@
-import { Scene, Cache, GameObjects, Cameras } from 'phaser';
-import { SCENE_GAME_CORE_KEY } from '../../config/constants';
+import { Scene, Cache, GameObjects, Cameras, Loader } from 'phaser';
+import { PRE_LOAD_GAME_KEY, SCENE_GAME_CORE_KEY } from '../../config/constants';
 import { MAP_CONFIG } from '../../config/gameConfig';
 import { GAME_CORE_API_ENDPOINTS } from '../../models/Domain/Domain.constant';
 import State, { IState } from '../../models/State/State';
@@ -46,8 +46,6 @@ class Engine extends Scene {
   }
 
   public create(): void {
-    this.clearMap();
-
     const masterChunksData = this.cache.json.get(MAP_CONFIG.MASTER_KEY);
 
     this.state.setState({
@@ -79,7 +77,12 @@ class Engine extends Scene {
 
   private listen(): void {
     this.cache.tilemap.events.on('add', (cache: Cache.CacheManager, key: string) => {
-      this.rerenderMap();
+      this.refreshMapLayer(key);
+    });
+    this.load.on('complete', (loader: Loader.LoaderPlugin) => {
+      if (loader.totalFailed) {
+        this.scene.start(PRE_LOAD_GAME_KEY);
+      }
     });
   }
 
@@ -119,6 +122,61 @@ class Engine extends Scene {
     this.state.setState({
       ...this.state.getState(),
       mapChunksIds: visibleChunks,
+    });
+
+    visibleChunks.forEach((id) => {
+      console.log('loading chunk:', id);
+
+      this.load.tilemapTiledJSON(`chunk${id}`, `${GAME_CORE_API_ENDPOINTS.MAP_CHUNK}/${id}`);
+    });
+
+    if (visibleChunks.length) {
+      this.load.start();
+    }
+  }
+
+  private refreshMapLayer(key: string): void {
+    const { chunkWidth, chunkHeight, nbChunksHorizontal, mapChunksIds, maps } = this.state.getState();
+
+    const map = this.make.tilemap({ key });
+
+    // The first parameter is the name of the tileset in Tiled and the second parameter is the key
+    // of the tileset image used when loading the file in preload.
+    const tiles = map.addTilesetImage('tilesheet', 'tiles');
+
+    // We need to compute the position of the chunk in the world
+    const chunkId = parseInt(/\d+/.exec(key)[0], 10); // Extracts the chunk number from file name
+
+    const chunkX = (chunkId % nbChunksHorizontal) * chunkWidth;
+    const chunkY = Math.floor(chunkId / nbChunksHorizontal) * chunkHeight;
+
+    map.layers.forEach((_, index) => {
+      // You can load a layer from the map using the layer name from Tiled,
+      // or by using the layer
+
+      // index
+      const layer = map.createLayer(index, tiles, chunkX * this.chunkW, chunkY * this.chunkH);
+
+      // Trick to automatically give different depths to each layer while avoid having
+      // a layer at depth 1 (because depth 1 is for our player character)
+
+      layer.setDepth(2 * index);
+    });
+
+    const newMap = {
+      ...maps,
+      [chunkId]: {
+        ...maps[chunkId],
+        ...map,
+      },
+    };
+
+    const newMapChunksIds = [...mapChunksIds, chunkId];
+
+    this.state.setState({
+      ...this.state.getState(),
+      map: newMap,
+      mapChunksIds: newMapChunksIds,
     });
   }
 }
