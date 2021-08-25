@@ -1,5 +1,6 @@
 import axios, { AxiosPromise, AxiosRequestConfig, Method } from 'axios';
 import Domain from '../Domain/Domain';
+import { Types } from 'phaser';
 import { DOMAIN_TYPE } from '../Domain/Domain.constant';
 import { JWT_TOKEN_KEY } from '../../config/App.config';
 
@@ -15,6 +16,16 @@ class Request implements IHttpRequest {
     this.domainInstance = new Domain(DOMAIN_TYPE.HTTP);
     this.isWithToken = privateRequest;
   }
+
+  static getCoreLoaderHeaders = (responseType = ''): Types.Loader.XHRSettingsObject => {
+    const token = Request.getToken();
+
+    return {
+      responseType,
+      header: 'authorization',
+      headerValue: `Bearer ${token}`,
+    } as Types.Loader.XHRSettingsObject;
+  };
 
   static getToken = () => localStorage.getItem(JWT_TOKEN_KEY);
 

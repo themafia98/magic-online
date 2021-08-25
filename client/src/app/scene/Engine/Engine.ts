@@ -4,6 +4,7 @@ import { MAP_CONFIG } from '../../config/gameConfig';
 import { GAME_CORE_API_ENDPOINTS } from '../../models/Domain/Domain.constant';
 import State, { IState } from '../../models/State/State';
 import { computeChunkId, getAvailableChunksIds } from './Engine.utils';
+import Request from '../../models/Request/Request';
 
 interface IEngineState {
   masterW: number;
@@ -87,9 +88,9 @@ class Engine extends Scene {
   }
 
   private fetch(): void {
-    this.load.image(MAP_CONFIG.SPRITE_PLAYER_KEY, GAME_CORE_API_ENDPOINTS.PLAYER_SPRITE);
-    this.load.image(MAP_CONFIG.SPRITE_MAP_KEY, GAME_CORE_API_ENDPOINTS.MAP_SPRITE);
-    this.load.json(MAP_CONFIG.MASTER_KEY, GAME_CORE_API_ENDPOINTS.MASTER_MAP);
+    // this.load.image(MAP_CONFIG.SPRITE_PLAYER_KEY, GAME_CORE_API_ENDPOINTS.PLAYER_SPRITE);
+    this.load.image(MAP_CONFIG.SPRITE_MAP_KEY, GAME_CORE_API_ENDPOINTS.MAP_SPRITE, Request.getCoreLoaderHeaders('blob'));
+    this.load.json(MAP_CONFIG.MASTER_KEY, GAME_CORE_API_ENDPOINTS.MASTER_MAP, undefined, Request.getCoreLoaderHeaders(''));
   }
 
   private destroyChunk(id: number, visibleChunks: Array<number>): void {
@@ -127,7 +128,11 @@ class Engine extends Scene {
     visibleChunks.forEach((id) => {
       console.log('loading chunk:', id);
 
-      this.load.tilemapTiledJSON(`chunk${id}`, `${GAME_CORE_API_ENDPOINTS.MAP_CHUNK}/${id}`);
+      if (id < 0) {
+        return;
+      }
+
+      this.load.tilemapTiledJSON(`chunk${id}`, `${GAME_CORE_API_ENDPOINTS.MAP_CHUNK}/${id}`, Request.getCoreLoaderHeaders(''));
     });
 
     if (visibleChunks.length) {
@@ -142,7 +147,7 @@ class Engine extends Scene {
 
     // The first parameter is the name of the tileset in Tiled and the second parameter is the key
     // of the tileset image used when loading the file in preload.
-    const tiles = map.addTilesetImage('tilesheet', 'tiles');
+    const tiles = map.addTilesetImage('tilesheet', MAP_CONFIG.SPRITE_MAP_KEY);
 
     // We need to compute the position of the chunk in the world
     const chunkId = parseInt(/\d+/.exec(key)[0], 10); // Extracts the chunk number from file name
@@ -160,13 +165,15 @@ class Engine extends Scene {
       // Trick to automatically give different depths to each layer while avoid having
       // a layer at depth 1 (because depth 1 is for our player character)
 
-      layer.setDepth(2 * index);
+      if (layer) {
+        layer.setDepth(2 * index);
+      }
     });
 
     const newMap = {
-      ...maps,
+      ...(maps || {}),
       [chunkId]: {
-        ...maps[chunkId],
+        ...(maps || {})?.[chunkId],
         ...map,
       },
     };
