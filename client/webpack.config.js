@@ -37,7 +37,7 @@ module.exports = {
     },
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js'],
+    extensions: [".ts", ".tsx", ".js", ".css", ".scss"],
     alias: {
       interfaces: path.resolve(__dirname, 'src/interfaces/'),
       scene: path.resolve(__dirname, 'src/scene/'),
@@ -79,6 +79,7 @@ module.exports = {
             loader: MiniCssExtractPlugin.loader,
             options: {},
           },
+          'css-modules-typescript-loader',
           'css-loader',
           'postcss-loader',
           'sass-loader',

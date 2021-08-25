@@ -1,11 +1,9 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import classes from './RegistrationPage.module.scss';
 import handleLoad from './RegistrationPage.events';
 import clsx from 'clsx';
 import scriptInjection from '../ScriptInjection';
 
-const generateRegistrationTemplate = () => `
+const generateRegistrationTemplate = (): string => `
 ${scriptInjection(handleLoad)}
 <div class=${classes.root}>
   <form

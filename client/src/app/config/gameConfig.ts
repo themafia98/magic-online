@@ -32,4 +32,10 @@ const gameConfig: Types.Core.GameConfig = {
   },
 };
 
+export const MAP_CONFIG = {
+  SPRITE_MAP_KEY: 'mapSprite',
+  MASTER_KEY: 'master',
+  CHUNK_KEY: 'chunk',
+};
+
 export default gameConfig;

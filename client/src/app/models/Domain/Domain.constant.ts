@@ -14,3 +14,9 @@ export enum API_ENDPOINTS {
   LOGIN = '/auth/login',
   CREATE_USER = '/users/create',
 }
+
+export enum GAME_CORE_API_ENDPOINTS {
+  MAP_SPRITE = '/public/sprite/map',
+  MASTER_MAP = '/map/master',
+  MAP_CHUNK = '/map/chunk',
+}

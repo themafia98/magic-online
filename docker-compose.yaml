@@ -4,7 +4,7 @@ services:
     image: mongo:latest
     container_name: magic_database
     ports:
-      - 27017:27017
+      - "27017:27017"
     volumes:
       - app-data:/var/lib/mongo/data
     env_file:
@@ -22,6 +22,7 @@ services:
       - server/.env
     ports:
       - ${SERVER_PORT}:${SERVER_PORT}
+      - "9229:9229"
     depends_on:
       - database
     restart: unless-stopped
@@ -33,7 +34,7 @@ services:
     env_file:
       - client/.env
     ports:
-      - 3000:80
+      - "3000:80"
     networks:
       - app-network
 volumes:
