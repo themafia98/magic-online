@@ -16,6 +16,7 @@ interface IEngineState {
   lastChunkId: number;
   map: Record<string, any>;
   mapChunksIds: Array<number>;
+  isLoaded: boolean;
 }
 
 const defaultState: IEngineState = {
@@ -28,6 +29,7 @@ const defaultState: IEngineState = {
   lastChunkId: 0,
   map: {},
   mapChunksIds: [],
+  isLoaded: false,
 };
 
 class Engine extends Scene {
@@ -49,6 +51,8 @@ class Engine extends Scene {
   }
 
   public create(): void {
+    this.input.on('pointerup', this.handleClick);
+
     const masterChunksData = this.cache.json.get(MAP_CONFIG.MASTER_KEY);
 
     this.state.setState({
@@ -79,6 +83,12 @@ class Engine extends Scene {
     this.camera.startFollow(player);
     this.player = player;
 
+    setTimeout(() => this.rerenderMap());
+  }
+
+  update(time: number, delta: number) {
+    super.update(time, delta);
+
     this.rerenderMap();
   }
 
@@ -87,11 +97,22 @@ class Engine extends Scene {
       this.refreshMapLayer(key);
     });
     this.load.on('complete', (loader: Loader.LoaderPlugin) => {
+      this.state.setState({
+        ...this.state.getState(),
+        isLoaded: true,
+      });
       if (loader.totalFailed) {
         this.scene.start(PRE_LOAD_GAME_KEY);
       }
     });
   }
+
+  private handleClick = (pointer) => {
+    const x = this.camera.scrollX + pointer.x;
+    const y = this.camera.scrollY + pointer.y;
+    this.player.setPosition(x, y);
+    this.rerenderMap();
+  };
 
   private fetch(): void {
     // this.load.image(MAP_CONFIG.SPRITE_PLAYER_KEY, GAME_CORE_API_ENDPOINTS.PLAYER_SPRITE);
@@ -111,9 +132,9 @@ class Engine extends Scene {
   private destroyChunk(id: number, visibleChunks: Array<number>): void {
     const state = this.state.getState();
 
-    const { [id]: mapChunk } = state.map;
+    const { [id]: mapChunk = null } = state.map;
 
-    if (mapChunk) {
+    if (mapChunk && mapChunk.destroy) {
       mapChunk.destroy();
     }
 
@@ -133,7 +154,7 @@ class Engine extends Scene {
 
     const visibleChunks = chunks.filter((chunk) => mapChunksIds.indexOf(chunk) < 0);
 
-    mapChunksIds
+    visibleChunks
       .filter((prevChunk) => chunks.indexOf(prevChunk) < 0)
       .forEach((chunk) => {
         this.destroyChunk(chunk, visibleChunks);
@@ -145,8 +166,6 @@ class Engine extends Scene {
     });
 
     visibleChunks.forEach((id) => {
-      console.log('loading chunk:', id);
-
       if (id < 0) {
         return;
       }
