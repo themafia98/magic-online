@@ -13,12 +13,19 @@ interface IGameLoader extends Scene {
   preload(): void;
 }
 
+interface IGameLoaderState {
+  isStop: boolean;
+  shouldRedirect: boolean;
+  errorMessage: string;
+  user?: null | Record<string, any>;
+}
+
 class GameLoader extends Scene implements IGameLoader {
   public percentage: number;
 
   public loadingText: GameObjects.Text;
 
-  private readonly state: IState;
+  private readonly state: IState<IGameLoaderState>;
 
   private timeoutRef: ReturnType<typeof setTimeout>;
 
@@ -52,7 +59,7 @@ class GameLoader extends Scene implements IGameLoader {
     this.handleLoad();
   }
 
-  public update() {
+  public update(): void {
     const { errorMessage, isStop } = this.state.getState();
 
     if (!errorMessage) {

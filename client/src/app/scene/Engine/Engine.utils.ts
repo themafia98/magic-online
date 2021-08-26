@@ -17,31 +17,31 @@ export const getAvailableChunksIds = (engine: Engine, chunkId: number): Array<nu
   }
 
   if (!isAtBottom) {
-    chunks.push((engineState as Record<string, number>).lastChunkId + (engineState as Record<string, number>).nbChunksHorizontal);
+    chunks.push(engineState.lastChunkId + engineState.nbChunksHorizontal);
   }
 
   if (!isAtLeft) {
-    chunks.push((engineState as Record<string, number>).lastChunkId - 1);
+    chunks.push(engineState.lastChunkId - 1);
   }
 
   if (!isAtRight) {
-    chunks.push((engineState as Record<string, number>).lastChunkId + 1);
+    chunks.push(engineState.lastChunkId + 1);
   }
 
   if (!isAtTop && !isAtLeft) {
-    chunks.push(engineState.lastChunkId - 1 - (engineState as Record<string, number>).nbChunksHorizontal);
+    chunks.push(engineState.lastChunkId - 1 - engineState.nbChunksHorizontal);
   }
 
   if (!isAtTop && !isAtRight) {
-    chunks.push((engineState as Record<string, number>).lastChunkId + 1 - (engineState as Record<string, number>).nbChunksHorizontal);
+    chunks.push(engineState.lastChunkId + 1 - engineState.nbChunksHorizontal);
   }
 
   if (!isAtBottom && !isAtLeft) {
-    chunks.push((engineState as Record<string, number>).lastChunkId - 1 + (engineState as Record<string, number>).nbChunksHorizontal);
+    chunks.push(engineState.lastChunkId - 1 + engineState.nbChunksHorizontal);
   }
 
   if (!isAtBottom && !isAtRight) {
-    chunks.push((engineState as Record<string, number>).lastChunkId + 1 + (engineState as Record<string, number>).nbChunksHorizontal);
+    chunks.push(engineState.lastChunkId + 1 + engineState.nbChunksHorizontal);
   }
 
   return chunks;

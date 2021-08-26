@@ -7,6 +7,8 @@ import { computeChunkId, getAvailableChunksIds } from './Engine.utils';
 import Request from '../../models/Request/Request';
 
 interface IEngineState {
+  chunkHeight: number;
+  chunkWidth: number;
   masterW: number;
   masterH: number;
   nbChunksHorizontal: number;
@@ -17,6 +19,8 @@ interface IEngineState {
 }
 
 const defaultState: IEngineState = {
+  chunkHeight: 32,
+  chunkWidth: 32,
   masterW: 0,
   masterH: 0,
   nbChunksHorizontal: 0,
@@ -27,11 +31,9 @@ const defaultState: IEngineState = {
 };
 
 class Engine extends Scene {
-  public readonly state: IState;
+  public readonly state: IState<IEngineState>;
 
   private camera: Cameras.Scene2D.Camera;
-  private readonly chunkW: number = 32;
-  private readonly chunkH: number = 32;
   private player: GameObjects.Image;
 
   constructor() {
@@ -64,9 +66,9 @@ class Engine extends Scene {
     const worldW = masterChunksData.nbChunksHorizontal * masterChunksData.chunkWidth;
     const worldH = masterChunksData.nbChunksVertical * masterChunksData.chunkHeight;
 
-    this.camera.setBounds(0, 0, worldW * this.chunkW, worldH * this.chunkH);
+    this.camera.setBounds(0, 0, worldW * masterChunksData.chunkWidth, worldH * masterChunksData.chunkHeight);
 
-    const player = this.add.image(this.chunkW * 10, this.chunkH * 10, MAP_CONFIG.SPRITE_PLAYER_KEY);
+    const player = this.add.image(masterChunksData.chunkWidth * 10, masterChunksData.chunkHeight * 10, MAP_CONFIG.SPRITE_PLAYER_KEY);
 
     player.setDepth(1);
 
@@ -96,7 +98,11 @@ class Engine extends Scene {
   private destroyChunk(id: number, visibleChunks: Array<number>): void {
     const state = this.state.getState();
 
-    state.map[id].destroy();
+    const { [id]: mapChunk } = state.map;
+
+    if (mapChunk) {
+      mapChunk.destroy();
+    }
 
     const idx = visibleChunks.indexOf(id);
 
@@ -141,7 +147,7 @@ class Engine extends Scene {
   }
 
   private refreshMapLayer(key: string): void {
-    const { chunkWidth, chunkHeight, nbChunksHorizontal, mapChunksIds, maps } = this.state.getState();
+    const { chunkWidth, chunkHeight, nbChunksHorizontal, mapChunksIds, map: mapValues } = this.state.getState();
 
     const map = this.make.tilemap({ key });
 
@@ -160,7 +166,7 @@ class Engine extends Scene {
       // or by using the layer
 
       // index
-      const layer = map.createLayer(index, tiles, chunkX * this.chunkW, chunkY * this.chunkH);
+      const layer = map.createLayer(index, tiles, chunkX * chunkWidth, chunkY * chunkHeight);
 
       // Trick to automatically give different depths to each layer while avoid having
       // a layer at depth 1 (because depth 1 is for our player character)
@@ -170,10 +176,13 @@ class Engine extends Scene {
       }
     });
 
+    // eslint-disable-next-line security/detect-object-injection
+    const chunk = mapValues?.[chunkId] || {};
+
     const newMap = {
-      ...(maps || {}),
+      ...mapValues,
       [chunkId]: {
-        ...(maps || {})?.[chunkId],
+        ...chunk,
         ...map,
       },
     };

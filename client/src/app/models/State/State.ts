@@ -2,19 +2,19 @@ interface IStateValues {
   [key: string]: any;
 }
 
-export interface IState {
-  getState(): IStateValues;
-  setState<T = Record<string, any>>(values): void;
+export interface IState<T = IStateValues> {
+  getState(): T;
+  setState(values: T): void;
 }
 
-class State implements IState {
-  constructor(private state: IStateValues) {}
+class State<T = IStateValues> implements IState<T> {
+  constructor(private state: T) {}
 
-  public getState(): IStateValues {
+  public getState(): T {
     return this.state;
   }
 
-  public setState<T = Record<string, any>>(values): void {
+  public setState(values: T): void {
     setTimeout(() => {
       this.state = {
         ...this.state,
