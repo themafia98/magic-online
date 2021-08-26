@@ -1,7 +1,7 @@
 {
   "name": "@magic-online/client",
   "scripts": {
-    "lint": "eslint --fix ./src/* --no-ignore",
+    "lint": "eslint --ext .js,.ts,.tsx src --quiet --fix",
     "start": "webpack serve --port 9001 --mode=development --progress",
     "build": "webpack",
     "build:prod": "webpack --config webpack.config.prod.js"

@@ -17,13 +17,11 @@ class MainMenu extends Scene implements IUserInterfaceScene {
     });
   }
 
-  preload(): void {}
-
   create(): void {
     this.dialog = new LoginDialog(this.scene.scene, this.scene.start.bind(this.scene)).view as UIPlugin.Sizer;
   }
 
-  update(time: number, delta: number) {
+  update() {
     if (Router.parseLocation() === appRoutes.PLAY) {
       this.scene.start(PRE_LOAD_GAME_KEY);
     }

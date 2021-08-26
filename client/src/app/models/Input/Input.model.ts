@@ -8,7 +8,15 @@ export type inputType = 'password' | 'text';
 export type inputEvent = 'textchange' | 'focus' | 'blur' | 'click' | 'dblclick';
 
 class Input extends InputText {
-  constructor(type: inputType, scene: Scene, x: number, y: number, width: number, height: number, config: InputText.IConfig) {
+  constructor(
+    type: inputType,
+    scene: Scene,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    config: InputText.IConfig
+  ) {
     super(scene, x, y, width, height, config);
 
     scene.add.existing(this);

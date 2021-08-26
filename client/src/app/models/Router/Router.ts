@@ -1,6 +1,5 @@
 import { CustomWindow } from '../../interfaces/global.interface';
 import { appRoutes } from '../../config/App.router';
-import REGISTRATION_TEMPLATE from '../../templates/RegistrationPage';
 import ERROR_404_TEMPLATE from '../../templates/Error404';
 import { runGame } from '../../start';
 import { SCRIPT_LOADER_KEY } from '../../templates/ScriptInjection';

@@ -12,7 +12,8 @@ class Domain implements IDomain {
 
   constructor(domainType: channelType) {
     this.domainType = domainType;
-    this.apiUrl = this.domainType === DOMAIN_TYPE.HTTP ? `${location.origin}${process.env.API_V1}` : WEBSOCKET_CUSTOM_URL;
+    this.apiUrl =
+      this.domainType === DOMAIN_TYPE.HTTP ? `${location.origin}${process.env.API_V1}` : WEBSOCKET_CUSTOM_URL;
   }
 
   get api() {

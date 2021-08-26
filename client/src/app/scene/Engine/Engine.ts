@@ -68,7 +68,11 @@ class Engine extends Scene {
 
     this.camera.setBounds(0, 0, worldW * masterChunksData.chunkWidth, worldH * masterChunksData.chunkHeight);
 
-    const player = this.add.image(masterChunksData.chunkWidth * 10, masterChunksData.chunkHeight * 10, MAP_CONFIG.SPRITE_PLAYER_KEY);
+    const player = this.add.image(
+      masterChunksData.chunkWidth * 10,
+      masterChunksData.chunkHeight * 10,
+      MAP_CONFIG.SPRITE_PLAYER_KEY
+    );
 
     player.setDepth(1);
 
@@ -91,8 +95,17 @@ class Engine extends Scene {
 
   private fetch(): void {
     // this.load.image(MAP_CONFIG.SPRITE_PLAYER_KEY, GAME_CORE_API_ENDPOINTS.PLAYER_SPRITE);
-    this.load.image(MAP_CONFIG.SPRITE_MAP_KEY, GAME_CORE_API_ENDPOINTS.MAP_SPRITE, Request.getCoreLoaderHeaders('blob'));
-    this.load.json(MAP_CONFIG.MASTER_KEY, GAME_CORE_API_ENDPOINTS.MASTER_MAP, undefined, Request.getCoreLoaderHeaders(''));
+    this.load.image(
+      MAP_CONFIG.SPRITE_MAP_KEY,
+      GAME_CORE_API_ENDPOINTS.MAP_SPRITE,
+      Request.getCoreLoaderHeaders('blob')
+    );
+    this.load.json(
+      MAP_CONFIG.MASTER_KEY,
+      GAME_CORE_API_ENDPOINTS.MASTER_MAP,
+      undefined,
+      Request.getCoreLoaderHeaders('')
+    );
   }
 
   private destroyChunk(id: number, visibleChunks: Array<number>): void {
@@ -138,7 +151,11 @@ class Engine extends Scene {
         return;
       }
 
-      this.load.tilemapTiledJSON(`chunk${id}`, `${GAME_CORE_API_ENDPOINTS.MAP_CHUNK}/${id}`, Request.getCoreLoaderHeaders(''));
+      this.load.tilemapTiledJSON(
+        `chunk${id}`,
+        `${GAME_CORE_API_ENDPOINTS.MAP_CHUNK}/${id}`,
+        Request.getCoreLoaderHeaders('')
+      );
     });
 
     if (visibleChunks.length) {

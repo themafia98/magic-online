@@ -6,7 +6,7 @@ import Request from '../Request/Request';
 import { API_ENDPOINTS } from '../Domain/Domain.constant';
 import Input from '../Input/Input.model';
 import { ILoginRequestBody, ITokenResponse } from '../../interfaces/global.interface';
-import globalConfig, { JWT_TOKEN_KEY } from '../../config/App.config';
+import { JWT_TOKEN_KEY } from '../../config/App.config';
 
 interface IMainPayload {
   start: runCallback;

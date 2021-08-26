@@ -21,6 +21,7 @@ const handleCreateUser: EventHandlerNonNull = (event) => {
   }
 
   formData.forEach((value, key) => {
+    // eslint-disable-next-line security/detect-object-injection
     formDataMap[key] = value;
   });
 
