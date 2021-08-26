@@ -3,8 +3,8 @@ const path = require("path");
 const clone = require("clone");
 
 function splitMap(fileName,out,chunkWidth,chunkHeight){
-  const defaultChunkWidth = 20;
-  const defaultChunkHeight = 20;
+  const defaultChunkWidth = 32;
+  const defaultChunkHeight = 32;
 
   if(!fileName){
     console.log('ERROR : No file name specified!');
@@ -33,7 +33,7 @@ function splitMap(fileName,out,chunkWidth,chunkHeight){
     const nbChunksVertical = Math.ceil(mapHeight/chunkHeight);
     const nbChunks = nbChunksHorizontal*nbChunksVertical;
     console.log('Splitting into '+nbChunks+' chunks ('+nbChunksHorizontal+' x '+nbChunksVertical+') of size ('+chunkWidth+' x '+chunkHeight+')');
-    console.log('Writing to '+outputDirectory);
+    console.log('Writing to ' + outputDirectory);
 
     // Creates a master file that contains information needed to properly manage the chunks
     const master = {
@@ -44,7 +44,12 @@ function splitMap(fileName,out,chunkWidth,chunkHeight){
       nbChunksVertical: nbChunksVertical,
       nbLayers: map.layers.length
     };
-    fs.writeFile(path.join(outputDirectory,'master.json'),JSON.stringify(master),function(err){
+    fs.writeFile(
+      path.join(outputDirectory,
+        'master.json'
+      ),
+      JSON.stringify(master),
+      function(err) {
       if(err) throw err;
       console.log('Master file written');
     });
