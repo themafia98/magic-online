@@ -13,3 +13,11 @@ export interface ILoginRequestBody {
 export interface ITokenResponse {
   accessToken: string;
 }
+
+export interface ISocketClientUser {
+  id: string;
+  x: number;
+  y: number;
+}
+
+export type TCharacterValues = ISocketClientUser[];

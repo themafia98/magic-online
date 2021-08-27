@@ -1,10 +1,13 @@
-import { Scene, Cache, GameObjects, Cameras, Loader } from 'phaser';
+import { Cache, Cameras, GameObjects, Loader, Scene } from 'phaser';
 import { PRE_LOAD_GAME_KEY, SCENE_GAME_CORE_KEY } from '../../config/constants';
 import { MAP_CONFIG } from '../../config/gameConfig';
 import { GAME_CORE_API_ENDPOINTS } from '../../models/Domain/Domain.constant';
 import State, { IState } from '../../models/State/State';
 import { computeChunkId, getAvailableChunksIds } from './Engine.utils';
 import Request from '../../models/Request/Request';
+import context from '../../app.context';
+import { WS_EVENTS_CLIENT, WS_EVENTS_SERVER } from '../../models/WebSocketClient/WebSocketClient.constant';
+import { ISocketClientUser, TCharacterValues } from '../../interfaces/global.interface';
 
 interface IEngineState {
   chunkHeight: number;
@@ -17,6 +20,7 @@ interface IEngineState {
   map: Record<string, any>;
   mapChunksIds: Array<number>;
   isLoaded: boolean;
+  isConnected: boolean;
 }
 
 const defaultState: IEngineState = {
@@ -30,12 +34,14 @@ const defaultState: IEngineState = {
   map: {},
   mapChunksIds: [],
   isLoaded: false,
+  isConnected: false,
 };
 
 class Engine extends Scene {
   public readonly state: IState<IEngineState>;
 
   private camera: Cameras.Scene2D.Camera;
+  private characterValues: TCharacterValues = [];
   private player: GameObjects.Image;
 
   constructor() {
@@ -45,6 +51,10 @@ class Engine extends Scene {
     this.state = new State(defaultState);
   }
 
+  setCharacterValues(character: ISocketClientUser) {
+    this.characterValues.push(character);
+  }
+
   public preload(): void {
     this.listen();
     this.fetch();
@@ -52,6 +62,35 @@ class Engine extends Scene {
 
   public create(): void {
     this.input.on('pointerup', this.handleClick);
+
+    const socket = context.ws.connect();
+
+    socket.on(WS_EVENTS_CLIENT.CONNECTION, () => {
+      this.state.setState({
+        ...this.state.getState(),
+        isConnected: true,
+      });
+      debugger;
+      context.ws.send(WS_EVENTS_SERVER.LOADED, {
+        x: this.player.x,
+        y: this.player.y,
+        id: socket.id,
+      });
+    });
+
+    context.ws.on(WS_EVENTS_CLIENT.NEW_PLAYER_EVENT, (character: ISocketClientUser) => {
+      debugger;
+      const newPlayer = this.add.image(
+        masterChunksData.chunkWidth * 10,
+        masterChunksData.chunkHeight * 10,
+        MAP_CONFIG.SPRITE_PLAYER_KEY
+      );
+
+      newPlayer.setPosition(character.x, character.y);
+      newPlayer.setDepth(1);
+
+      this.setCharacterValues(character);
+    });
 
     const masterChunksData = this.cache.json.get(MAP_CONFIG.MASTER_KEY);
 

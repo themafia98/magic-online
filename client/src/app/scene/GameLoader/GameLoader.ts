@@ -6,6 +6,7 @@ import State, { IState } from '../../models/State/State';
 import Request from '../../models/Request/Request';
 import { API_ENDPOINTS } from '../../models/Domain/Domain.constant';
 import { appRoutes } from '../../config/App.router';
+import { ISocketClientUser } from '../../interfaces/global.interface';
 
 interface IGameLoader extends Scene {
   percentage: number;
@@ -83,16 +84,6 @@ class GameLoader extends Scene implements IGameLoader {
     }, 2000);
   }
 
-  private handleStartWebsocket = () => {
-    const socket = context.ws.connect();
-
-    socket.on(WS_EVENTS_CLIENT.CONNECTION, () => {
-      setTimeout(() => {
-        this.complete();
-      }, 1000);
-    });
-  };
-
   private handleLoad = () => {
     const { user } = this.state.getState();
     if (user) {
@@ -119,7 +110,7 @@ class GameLoader extends Scene implements IGameLoader {
           ...this.state.getState(),
           user: userData,
         });
-        this.handleStartWebsocket();
+        this.complete();
       })
       .catch((error) => {
         const { errorMessage = error.message } = error.response.data || {};

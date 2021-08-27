@@ -1,6 +1,6 @@
 import io, { Socket } from 'socket.io-client';
 import { Method } from 'axios';
-import { WS_EVENTS_SERVER } from './WebSocketClient.constant';
+import { WS_EVENTS_CLIENT, WS_EVENTS_SERVER } from './WebSocketClient.constant';
 import Domain from '../Domain/Domain';
 import { DOMAIN_TYPE } from '../Domain/Domain.constant';
 import webSocketEventsRegister from './WebSocketClient.utils';
@@ -42,13 +42,17 @@ class WebSocketClient implements IWebSocket {
     this.socket.emit(eventName, this.createPayloadJsonString<T>(data));
   };
 
-  private createPayloadJsonString = <T = null>(data: T, messageMethodType?: Method): string => {
+  public on(eventName: WS_EVENTS_CLIENT, callback: (...args: any[]) => void) {
+    this.socket.on(eventName, callback);
+  }
+
+  private createPayloadJsonString = <T = null>(data: T, messageMethodType?: Method): { type: string; payload: T } => {
     const message = {
       type: messageMethodType,
       payload: data,
     };
 
-    return JSON.stringify(message);
+    return message;
   };
 
   private subscribe = (): void => {
