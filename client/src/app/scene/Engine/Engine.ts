@@ -70,7 +70,7 @@ class Engine extends Scene {
         ...this.state.getState(),
         isConnected: true,
       });
-      debugger;
+
       context.ws.send(WS_EVENTS_SERVER.LOADED, {
         x: this.player.x,
         y: this.player.y,
@@ -79,7 +79,6 @@ class Engine extends Scene {
     });
 
     context.ws.on(WS_EVENTS_CLIENT.NEW_PLAYER_EVENT, (character: ISocketClientUser) => {
-      debugger;
       const newPlayer = this.add.image(
         masterChunksData.chunkWidth * 10,
         masterChunksData.chunkHeight * 10,
