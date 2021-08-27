@@ -35,7 +35,7 @@ EXPOSE 3003
 RUN yarn build
 
 CMD [ "yarn", "pm2:delete" ]
-#CMD [ "yarn", "build-docker:dev" ]
+CMD [ "yarn", "build-docker:dev" ]
 
 # start run in development environment
-CMD [ "yarn", "start:dev" ]
+# CMD [ "yarn", "start:dev" ]

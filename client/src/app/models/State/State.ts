@@ -15,12 +15,10 @@ class State<T = IStateValues> implements IState<T> {
   }
 
   public setState(values: T): void {
-    setTimeout(() => {
-      this.state = {
-        ...this.state,
-        ...values,
-      };
-    });
+    this.state = {
+      ...this.state,
+      ...values,
+    };
   }
 }
 

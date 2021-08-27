@@ -23,7 +23,8 @@ const Events: IEvents = {
     if (!name) {
       throw new Error('invalid event');
     }
-
+    // eslint-disable-next-line no-debugger
+    debugger;
     if (name === appRoutes.PLAY) {
       const { data: dataUsernameInput } = eventPayload.usernameInput;
       const { data: dataPasswordInput } = eventPayload.passwordInput;

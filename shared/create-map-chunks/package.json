@@ -4,7 +4,7 @@
   "description": "",
   "main": "create-map-chunks.js",
   "scripts": {
-    "start": "node ./create-map-chunks.js -i /static/fullmap.json",
+    "start": "node ./create-map-chunks.js -i fullmap.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

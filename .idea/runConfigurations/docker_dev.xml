@@ -13,6 +13,14 @@
               <option name="name" value="SERVER_PORT" />
               <option name="value" value="9229" />
             </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="DOCKER_BUILDKIT" />
+              <option name="value" value="1" />
+            </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="COMPOSE_DOCKER_CLI_BUILD" />
+              <option name="value" value="1" />
+            </DockerEnvVarImpl>
           </list>
         </option>
         <option name="commandLineOptions" value="--build" />

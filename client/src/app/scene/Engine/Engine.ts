@@ -61,7 +61,7 @@ class Engine extends Scene {
       chunkHeight: masterChunksData.chunkHeight,
       nbChunksHorizontal: masterChunksData.nbChunksHorizontal,
       nbChunksVertical: masterChunksData.nbChunksVertical,
-      lastChunkId: masterChunksData.nbChunksHorizontal * masterChunksData.nbChunksVertical - 1,
+      lastChunkId: masterChunksData.nbChunksHorizontal * masterChunksData.nbChunksVertical - 10,
     });
 
     this.camera = this.cameras.main;
@@ -70,7 +70,7 @@ class Engine extends Scene {
     const worldW = masterChunksData.nbChunksHorizontal * masterChunksData.chunkWidth;
     const worldH = masterChunksData.nbChunksVertical * masterChunksData.chunkHeight;
 
-    this.camera.setBounds(0, 0, worldW * masterChunksData.chunkWidth, worldH * masterChunksData.chunkHeight);
+    this.camera.setBounds(0, 0, worldW / masterChunksData.chunkWidth, worldH / masterChunksData.chunkHeight);
 
     const player = this.add.image(
       masterChunksData.chunkWidth * 10,
@@ -88,8 +88,6 @@ class Engine extends Scene {
 
   update(time: number, delta: number) {
     super.update(time, delta);
-
-    this.rerenderMap();
   }
 
   private listen(): void {
@@ -101,7 +99,7 @@ class Engine extends Scene {
         ...this.state.getState(),
         isLoaded: true,
       });
-      if (loader.totalFailed) {
+      if (loader.totalFailed === 3) {
         this.scene.start(PRE_LOAD_GAME_KEY);
       }
     });

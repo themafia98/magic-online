@@ -6,43 +6,22 @@ export const getAvailableChunksIds = (engine: Engine, chunkId: number): Array<nu
   const chunks = [];
 
   const isAtTop = chunkId < engineState.nbChunksHorizontal;
+
   const isAtBottom = chunkId > engineState.lastChunkId - engineState.nbChunksHorizontal;
-  const isAtLeft = engineState.lastChunkId % engineState.nbChunksHorizontal === 0;
-  const isAtRight = engineState.lastChunkId % engineState.nbChunksHorizontal === engineState.nbChunksHorizontal - 1;
+  const isAtLeft = chunkId % engineState.nbChunksHorizontal == 0;
+  const isAtRight = chunkId % engineState.nbChunksHorizontal == engineState.nbChunksHorizontal - 1;
 
-  chunks.push(engineState.lastChunkId);
+  chunks.push(chunkId);
 
-  if (!isAtTop) {
-    chunks.push(engineState.lastChunkId - engineState.nbChunksHorizontal);
-  }
+  if (!isAtTop) chunks.push(chunkId - engineState.nbChunksHorizontal);
+  if (!isAtBottom) chunks.push(chunkId + engineState.nbChunksHorizontal);
+  if (!isAtLeft) chunks.push(chunkId - 1);
+  if (!isAtRight) chunks.push(chunkId + 1);
 
-  if (!isAtBottom) {
-    chunks.push(engineState.lastChunkId + engineState.nbChunksHorizontal);
-  }
-
-  if (!isAtLeft) {
-    chunks.push(engineState.lastChunkId - 1);
-  }
-
-  if (!isAtRight) {
-    chunks.push(engineState.lastChunkId + 1);
-  }
-
-  if (!isAtTop && !isAtLeft) {
-    chunks.push(engineState.lastChunkId - 1 - engineState.nbChunksHorizontal);
-  }
-
-  if (!isAtTop && !isAtRight) {
-    chunks.push(engineState.lastChunkId + 1 - engineState.nbChunksHorizontal);
-  }
-
-  if (!isAtBottom && !isAtLeft) {
-    chunks.push(engineState.lastChunkId - 1 + engineState.nbChunksHorizontal);
-  }
-
-  if (!isAtBottom && !isAtRight) {
-    chunks.push(engineState.lastChunkId + 1 + engineState.nbChunksHorizontal);
-  }
+  if (!isAtTop && !isAtLeft) chunks.push(chunkId - 1 - engineState.nbChunksHorizontal);
+  if (!isAtTop && !isAtRight) chunks.push(chunkId + 1 - engineState.nbChunksHorizontal);
+  if (!isAtBottom && !isAtLeft) chunks.push(chunkId - 1 + engineState.nbChunksHorizontal);
+  if (!isAtBottom && !isAtRight) chunks.push(chunkId + 1 + engineState.nbChunksHorizontal);
 
   return chunks;
 };
