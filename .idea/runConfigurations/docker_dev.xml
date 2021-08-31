@@ -28,6 +28,7 @@
           <list>
             <option value="database" />
             <option value="backend" />
+            <option value="redis-server" />
           </list>
         </option>
         <option name="sourceFilePath" value="docker-compose.yaml" />

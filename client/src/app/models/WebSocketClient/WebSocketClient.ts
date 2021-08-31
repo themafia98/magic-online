@@ -7,7 +7,7 @@ import webSocketEventsRegister from './WebSocketClient.utils';
 
 export interface IWebSocket {
   socket: Socket;
-  send: <T = null>(eventName: WS_EVENTS_SERVER, data: T) => void;
+  send: <T = null>(eventName: WS_EVENTS_SERVER, data: T, callback?: (arg: any) => void) => void;
   connect: () => Socket;
 }
 
@@ -38,21 +38,21 @@ class WebSocketClient implements IWebSocket {
     return this.socketEntity;
   };
 
-  public send = <T = null>(eventName: WS_EVENTS_SERVER, data: T): void => {
-    this.socket.emit(eventName, this.createPayloadJsonString<T>(data));
+  public send = <T = null>(eventName: WS_EVENTS_SERVER, data?: T, callback?: (arg: any) => void): void => {
+    this.socket.emit(eventName, data ? this.createPayloadJsonString<T>(data) : undefined, callback);
   };
 
   public on(eventName: WS_EVENTS_CLIENT, callback: (...args: any[]) => void) {
     this.socket.on(eventName, callback);
   }
 
-  private createPayloadJsonString = <T = null>(data: T, messageMethodType?: Method): { type: string; payload: T } => {
+  private createPayloadJsonString = <T = null>(data: T, messageMethodType?: Method): string => {
     const message = {
       type: messageMethodType,
       payload: data,
     };
 
-    return message;
+    return JSON.stringify(message);
   };
 
   private subscribe = (): void => {

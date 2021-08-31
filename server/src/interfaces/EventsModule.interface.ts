@@ -10,3 +10,13 @@ export interface ISocketUser extends Socket {
 export interface ISocketUserMap {
   [key: string]: ISocketUser
 }
+
+export interface IPayload<T> {
+  payload: T
+}
+
+export interface LoadedParams {
+  x: number;
+  y: number;
+  id: string;
+}

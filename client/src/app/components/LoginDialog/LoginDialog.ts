@@ -26,7 +26,7 @@ interface DialogState {
 export type runCallback = (key?: string | Scene, data?: Record<string, any>) => void;
 
 class LoginDialog extends ViewComponent {
-  private start: null | runCallback;
+  private readonly start: null | runCallback;
 
   constructor(scene: unknown, starter?: (key?: string | Scene, data?: Record<string, any>) => void) {
     super(scene as Scene);

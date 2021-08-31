@@ -1,5 +1,18 @@
 version: '3.9'
 services:
+  redis-server:
+    image: 'redis:alpine'
+    container_name: redis-ws-adapter
+    command: redis-server --requirepass sOmE_sEcUrE_pAsS
+    ports:
+    - "6379:6379"
+    volumes:
+      - $PWD/redis-data:/var/lib/redis
+      - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
+    env_file:
+      - server/.env.redis
+    networks:
+      - app-network
   database:
     image: mongo:latest
     container_name: magic_database
@@ -25,6 +38,7 @@ services:
       - "9230:9230"
     depends_on:
       - database
+      - redis-server
     restart: unless-stopped
     networks:
       - app-network

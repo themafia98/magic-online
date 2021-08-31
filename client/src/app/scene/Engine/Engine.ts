@@ -7,7 +7,8 @@ import { computeChunkId, getAvailableChunksIds } from './Engine.utils';
 import Request from '../../models/Request/Request';
 import context from '../../app.context';
 import { WS_EVENTS_CLIENT, WS_EVENTS_SERVER } from '../../models/WebSocketClient/WebSocketClient.constant';
-import { ISocketClientUser, TCharacterValues } from '../../interfaces/global.interface';
+import { ISocketClientUser, ISocketClientUsersMap, TCharacterValues } from '../../interfaces/global.interface';
+import { setValueToMap } from '../../utils/utils.global';
 
 interface IEngineState {
   chunkHeight: number;
@@ -39,9 +40,10 @@ const defaultState: IEngineState = {
 
 class Engine extends Scene {
   public readonly state: IState<IEngineState>;
+  private uuid = '';
 
   private camera: Cameras.Scene2D.Camera;
-  private characterValues: TCharacterValues = [];
+  private characterValuesMap: Map<string, ISocketClientUser> = new Map();
   private player: GameObjects.Image;
 
   constructor() {
@@ -51,8 +53,32 @@ class Engine extends Scene {
     this.state = new State(defaultState);
   }
 
+  updateCharacters(charactersMap: ISocketClientUsersMap) {
+    this.characterValuesMap = new Map(Object.entries(charactersMap));
+  }
+
+  rerenderCharacters() {
+    const masterChunksData = this.cache.json.get(MAP_CONFIG.MASTER_KEY);
+
+    if (!masterChunksData) {
+      console.warn('masterChunksData not found for update characters');
+      return;
+    }
+    this.cache.obj.remove(MAP_CONFIG.SPRITE_PLAYER_KEY);
+    this.characterValuesMap.forEach((value) => {
+      const newPlayer = this.add.image(
+        masterChunksData.chunkWidth * 10,
+        masterChunksData.chunkHeight * 10,
+        MAP_CONFIG.SPRITE_PLAYER_KEY
+      );
+
+      newPlayer.setPosition(value.x, value.y);
+      newPlayer.setDepth(1);
+    });
+  }
+
   setCharacterValues(character: ISocketClientUser) {
-    this.characterValues.push(character);
+    setValueToMap(character, character.id, this.characterValuesMap);
   }
 
   public preload(): void {
@@ -71,11 +97,18 @@ class Engine extends Scene {
         isConnected: true,
       });
 
-      context.ws.send(WS_EVENTS_SERVER.LOADED, {
+      context.ws.send(WS_EVENTS_SERVER.REFRESH_CHARACTER, {
         x: this.player.x,
         y: this.player.y,
         id: socket.id,
       });
+
+      this.uuid = socket.id;
+    });
+
+    socket.on(WS_EVENTS_CLIENT.TICK_INFO_EVENT, (charactersMap: ISocketClientUsersMap) => {
+      this.updateCharacters(charactersMap);
+      this.rerenderCharacters();
     });
 
     context.ws.on(WS_EVENTS_CLIENT.NEW_PLAYER_EVENT, (character: ISocketClientUser) => {
@@ -126,6 +159,16 @@ class Engine extends Scene {
 
   update(time: number, delta: number) {
     super.update(time, delta);
+
+    const { isConnected, isLoaded } = this.state.getState();
+
+    if (isConnected && isLoaded && this.uuid) {
+      const character = this.characterValuesMap.get(this.uuid);
+
+      if (character) {
+        context.ws.send(WS_EVENTS_SERVER.TICK, character);
+      }
+    }
   }
 
   private listen(): void {
@@ -147,7 +190,16 @@ class Engine extends Scene {
     const x = this.camera.scrollX + pointer.x;
     const y = this.camera.scrollY + pointer.y;
     this.player.setPosition(x, y);
-    this.rerenderMap();
+
+    const character = this.characterValuesMap.get(this.uuid);
+
+    const refreshCharacter = {
+      ...character,
+      x,
+      y,
+    };
+
+    context.ws.send(WS_EVENTS_SERVER.REFRESH_CHARACTER, refreshCharacter);
   };
 
   private fetch(): void {

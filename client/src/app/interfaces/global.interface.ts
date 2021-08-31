@@ -20,4 +20,8 @@ export interface ISocketClientUser {
   y: number;
 }
 
+export interface ISocketClientUsersMap {
+  [key: string]: ISocketClientUser;
+}
+
 export type TCharacterValues = ISocketClientUser[];

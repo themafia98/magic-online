@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './modules/App/app.module';
-import { IoAdapter } from '@nestjs/platform-socket.io';
 import * as helmet from 'helmet';
+import { RedisIoAdapter } from "./models/RedisAdapter/RedisAdapter";
 // import * as csurf from 'csurf';
 
 async function bootstrap() {
@@ -9,7 +9,7 @@ async function bootstrap() {
   app.use(helmet());
   // app.use(csurf());
 
-  app.useWebSocketAdapter(new IoAdapter(app));
+  app.useWebSocketAdapter(new RedisIoAdapter(app));
 
   const port = process.env.SERVER_PORT || 9229;
 
