@@ -77,7 +77,7 @@ export class EventsGateway
   }
 
   handleConnection(client: Socket) {
-    client.join('/core-channel');
+    client.join(EventsGateway.pipe);
     console.log('connection client:', client.id);
     this.playersMap.delete(client.id);
 
@@ -88,6 +88,7 @@ export class EventsGateway
 
   handleDisconnect(client: Socket) {
     this.playersMap.delete(client.id);
+    client.leave(EventsGateway.pipe);
     console.log('disconnect client:', client.id);
   }
 }
