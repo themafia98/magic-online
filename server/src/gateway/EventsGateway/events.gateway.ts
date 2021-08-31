@@ -23,7 +23,9 @@ export class EventsGateway
 
   private logger: Logger = new Logger('EventsGateway');
 
-  private playersMap: Map<string, ISocketUser> = new Map<string, ISocketUser>()
+  static readonly pipe = process.env.CORE_CHANNEL || '';
+
+  private playersMap: Map<string, ISocketUser> = new Map<string, ISocketUser>();
 
   get players() {
     return this.playersMap;
@@ -57,7 +59,7 @@ export class EventsGateway
 
     this.setPlayer(client, x, y);
 
-    client.emit(NEW_PLAYER_EVENT, this.players.get(client.id));
+    client.to(EventsGateway.pipe).emit(NEW_PLAYER_EVENT, this.players.get(client.id));
   }
 
   @SubscribeMessage('tick')
@@ -71,19 +73,21 @@ export class EventsGateway
 
     const playersMap: ISocketUserMap = toObjectMap(this.players);
 
-    client.emit(TICK_INFO_EVENT, playersMap);
+    client.to(EventsGateway.pipe).emit(TICK_INFO_EVENT, playersMap);
   }
 
   handleConnection(client: Socket) {
+    client.join('/core-channel');
     console.log('connection client:', client.id);
     this.playersMap.delete(client.id);
 
     const playersMap: ISocketUserMap = toObjectMap(this.players);
 
-    client.broadcast.emit(TICK_INFO_EVENT, playersMap);
+    client.broadcast.to(EventsGateway.pipe).emit(TICK_INFO_EVENT, playersMap);
   }
 
   handleDisconnect(client: Socket) {
+    this.playersMap.delete(client.id);
     console.log('disconnect client:', client.id);
   }
 }
