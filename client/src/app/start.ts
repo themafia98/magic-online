@@ -18,9 +18,7 @@ export const runGame = (): void => {
     window.game.destroy(true);
   }
 
-  const instanceGame = new Game(gameConfig);
-
-  window.game = instanceGame;
+  window.game = new Game(gameConfig);
 };
 
 const bootstrap = (): void => {

@@ -11,7 +11,7 @@ import {
 import { Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { ISocketUser, ISocketUserMap, LoadedParams } from '../../interfaces/EventsModule.interface';
-import { NEW_PLAYER_EVENT, TICK_INFO_EVENT } from "./events.constant";
+import { FPS, GAME_LOOP_PLAYERS, NEW_PLAYER_EVENT, STEP_TICK_INFO_EVENT } from "./events.constant";
 import { setValueToMap, toObjectMap, toPayload } from "../../utils/utils.global";
 
 @WebSocketGateway()
@@ -73,7 +73,7 @@ export class EventsGateway
 
     const playersMap: ISocketUserMap = toObjectMap(this.players);
 
-    client.to(EventsGateway.pipe).emit(TICK_INFO_EVENT, playersMap);
+    client.to(EventsGateway.pipe).emit(STEP_TICK_INFO_EVENT, playersMap);
   }
 
   handleConnection(client: Socket) {
@@ -83,7 +83,13 @@ export class EventsGateway
 
     const playersMap: ISocketUserMap = toObjectMap(this.players);
 
-    client.broadcast.to(EventsGateway.pipe).emit(TICK_INFO_EVENT, playersMap);
+    client.broadcast.to(EventsGateway.pipe).emit(STEP_TICK_INFO_EVENT, playersMap);
+
+    setInterval(() => {
+      const playersMap: ISocketUserMap = toObjectMap(this.players);
+
+      client.to(EventsGateway.pipe).emit(GAME_LOOP_PLAYERS, playersMap);
+    }, 1000 / FPS)
   }
 
   handleDisconnect(client: Socket) {

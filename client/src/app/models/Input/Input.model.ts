@@ -30,7 +30,7 @@ class Input extends InputText {
     let nextValue = input.text;
 
     if (input.type === 'password') {
-      const values = input.text.length > 1 ? input.data.values.value : '';
+      const values = input.text.length > 1 ? input.data?.values.value || input.text : input.text;
 
       nextValue = nextLatter ? `${values}${nextLatter}`.trim() : values;
       input.text = setTextMask(input.text);

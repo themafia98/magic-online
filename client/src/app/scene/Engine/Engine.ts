@@ -106,7 +106,12 @@ class Engine extends Scene {
       this.uuid = socket.id;
     });
 
-    socket.on(WS_EVENTS_CLIENT.TICK_INFO_EVENT, (charactersMap: ISocketClientUsersMap) => {
+    socket.on(WS_EVENTS_CLIENT.GAME_LOOP_PLAYERS, (charactersMap: ISocketClientUsersMap) => {
+      this.updateCharacters(charactersMap);
+      this.rerenderCharacters();
+    });
+
+    socket.on(WS_EVENTS_CLIENT.STEP_TICK_INFO_EVENT, (charactersMap: ISocketClientUsersMap) => {
       this.updateCharacters(charactersMap);
       this.rerenderCharacters();
     });
@@ -159,16 +164,6 @@ class Engine extends Scene {
 
   update(time: number, delta: number) {
     super.update(time, delta);
-
-    const { isConnected, isLoaded } = this.state.getState();
-
-    if (isConnected && isLoaded && this.uuid) {
-      const character = this.characterValuesMap.get(this.uuid);
-
-      if (character) {
-        context.ws.send(WS_EVENTS_SERVER.TICK, character);
-      }
-    }
   }
 
   private listen(): void {
